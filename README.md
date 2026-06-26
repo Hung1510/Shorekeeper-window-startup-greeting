@@ -1,8 +1,8 @@
 # shorekeeper-startup-voice
 
-Play a game voice line when you log in to Windows -> a tiny silent player plus a pipeline to extract clips from Square Enix SAB audio banks (Final FantasyXVI voice mods for Shorekeeper in my case) cause I for my own sake cant find any usable file of Shorekeeper voice without entering the game and record it with bandicam or something so Ive built this tool for my future use and anyone that might be interested
+Play a game voice line when you log in to Windows -> a tiny silent player plus a pipeline to extract clips from Square Enix SAB audio banks (Final Fantasy XVI voice mods for Shorekeeper in my case) cause I for my own sake cant find any usable file of Shorekeeper voice without entering the game and record it with bandicam or something so Ive built this tool for my future use and anyone that might be interested
 
-Built as a fun personal project. Works with any short `.wav`, so you can use any voice you like. Gonna keep expanding it when I have free time from work
+Built as a fun personal project. Works with any short `.wav`, so you can use any voice you like. It now also pulls from Wwise (.bnk / .wem) banks. Gonna keep expanding it when I have free time from work, open for any sound format if anyone is interested
 
 ---
 
@@ -14,16 +14,21 @@ Built as a fun personal project. Works with any short `.wav`, so you can use any
 
 ## What's inside
 
+Each sound format has its own folder so you can grab just what you need.
+
 ```
 extract/
-  extract_pipeline.sh # SAB bank -> normalized .wav clips (Linux/WSL)
-player/
-  startup_voice.cpp # compiled silent player (no window) - C++/Win32
-  startup_voice.vbs # zero-install player - VBScript
-  startup_voice.ps1 # alternative player - PowerShell
+  sab/ extract_sab.sh # Square Enix SAB bank -> normalized .wav clips
+  wwise/ extract_wwise.sh # Wwise .bnk / .wem -> normalized .wav clips
+player/ # same player for any format, just plays the final .wav
+  sab/ startup_voice.cpp / .vbs / .ps1
+  wwise/ startup_voice.cpp / .vbs / .ps1
 docs/
-  SETUP_GUIDE.md # full setup
+  sab/ EXTRACT.md + SETUP_GUIDE.md
+  wwise/ EXTRACT.md + SETUP_GUIDE.md
 ```
+
+The player is identical in both folders -> it doesnt care where the audio came from, its duplicated only so each format folder is self-contained.
 
 ---
 
@@ -31,46 +36,51 @@ docs/
 
 ### 1 -> Get a clip
 
-If you already have a `.wav`, skip ahead. To pull one from a Square Enix `.sab` voice bank you own, on Linux/WSL:
+If you already have a `.wav`, skip ahead. Otherwise pick your format and run its script (Linux/WSL):
 
 ```bash
-./extract/extract_pipeline.sh path/to/yourfile.zip JP
+# Square Enix SAB
+./extract/sab/extract_sab.sh path/to/yourfile.zip JP
+
+# Wwise (.bnk / .wem)
+./extract/wwise/extract_wwise.sh path/to/folder_or_files.zip
+
+# both give you:
 # -> out/clips/
 # -> out/voice.wav (default pick)
 ```
 
-The script builds [vgmstream](https://github.com/vgmstream/vgmstream) (decodes the SAB/CRI-HCA), pulls the phrase-length lines,
-then loudness-normalizes and fades them with ffmpeg. On Windows you can do the same manually with the prebuilt `vgmstream-cli` + `ffmpeg` -> see `docs/SETUP_GUIDE.md`.
+Each script builds [vgmstream](https://github.com/vgmstream/vgmstream) (decodes the container/codec), pulls the phrase-length streams,
+then loudness-normalizes and fades them with ffmpeg. On Windows you can do the same manually with the prebuilt `vgmstream-cli` + `ffmpeg` -> see the matching `docs/<format>/EXTRACT.md`.
 
 ### 2 -> Build the player (optional, VBS needs no build)
 
 ```bash
 # MinGW-w64
-g++ player/startup_voice.cpp -o startup_voice.exe -municode -lwinmm -mwindows -O2 -static
+g++ player/sab/startup_voice.cpp -o startup_voice.exe -municode -lwinmm -mwindows -O2 -static
 
 # MSVC
-cl /O2 player/startup_voice.cpp /link winmm.lib
+cl /O2 player/sab/startup_voice.cpp /link winmm.lib
 ```
 
-The C++ player plays `voice.wav` from its own folder (or a path
-passed as the first argument). `PlaySound` handles PCM `.wav`.
+(`player/wwise/startup_voice.cpp` is the same file, build either.) The player plays `voice.wav` from its own folder (or a path passed as the first argument). It uses the Windows MCI engine, so it handles any WAV variant plus mp3.
 
 ### 3 -> Run it at login
 
 Put your `.wav` and the player in `C:\Sounds\`, then create a Task Scheduler task
 with an "At log on" trigger pointing at the player. Full steps in
-`docs/SETUP_GUIDE.md`.
+`docs/<format>/SETUP_GUIDE.md`.
 
 ---
 
 ## How the extraction works
 
-1. Identify -> Square Enix SAB files start with the magic `sabf`.
-2. Decode -> vgmstream reads the container; audio inside is CRI HCA. Each `.sab` holds many "subsongs"
-3. Filter -> keep lines above a length threshold (skips tiny combat grunts).
-4. Curate -> keep the fullest take of each distinct line, loudness-normalize, add a short fade-out
+1. Identify -> SAB files start with the magic `sabf`; Wwise ships `.bnk` banks and `.wem` streams.
+2. Decode -> vgmstream reads the container and auto-detects the codec (CRI HCA for SAB; Vorbis / Opus / ADPCM / PCM for Wwise). Banks hold many "subsongs".
+3. Filter -> keep streams above a length threshold (skips tiny grunts/blips).
+4. Curate -> keep the fullest/longest takes, loudness-normalize, add a short fade-out
 
-Knobs at the top of `extract_pipeline.sh`: `MIN_SECS`, `TOP_N`, `LANG_PICK`.
+Knobs at the top of each script: `MIN_SECS`, `TOP_N` (and `LANG_PICK` for SAB).
 
 ---
 

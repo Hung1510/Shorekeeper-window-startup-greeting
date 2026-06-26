@@ -1,8 +1,10 @@
+// startup_voice.cpp
 #include <windows.h>
 #include <mmsystem.h>
 #include <string>
 #pragma comment(lib, "winmm.lib")
 
+// Directory of the running .exe
 static std::wstring exeDir() {
     wchar_t buf[MAX_PATH];
     DWORD n = GetModuleFileNameW(NULL, buf, MAX_PATH);
