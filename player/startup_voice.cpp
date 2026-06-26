@@ -11,18 +11,22 @@ static std::wstring exeDir() {
     return (slash == std::wstring::npos) ? L"" : path.substr(0, slash + 1);
 }
 
-int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR lpCmdLine, int) {
+int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int) {
     std::wstring target;
-
     int argc = 0;
     LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    if (argv && argc >= 2 && argv[1][0] != L'\0') {
+    if (argv && argc >= 2 && argv[1][0] != L'\0')
         target = argv[1];
-    }
-    else {
-        target = exeDir() + L"shorekeeper_hello.wav";
-    }
+    else
+        target = exeDir() + L"voice.wav";
     if (argv) LocalFree(argv);
+
+    std::wstring openCmd = L"open \"" + target + L"\" alias snd";
+    if (mciSendStringW(openCmd.c_str(), NULL, 0, NULL) == 0) {
+        mciSendStringW(L"play snd wait", NULL, 0, NULL);
+        mciSendStringW(L"close snd", NULL, 0, NULL);
+        return 0;
+    }
 
     PlaySoundW(target.c_str(), NULL, SND_FILENAME | SND_SYNC);
     return 0;
