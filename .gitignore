@@ -1,0 +1,31 @@
+# --- Game assets & extracted audio: DO NOT redistribute (copyrighted) ---
+*.wav
+*.sab
+*.pck
+*.bnk
+*.mp3
+*.ogg
+
+# Mod archives / inputs
+*.zip
+*.7z
+*.rar
+
+# Pipeline working/output dirs
+out/
+work/
+raw/
+clips/
+jp_all/
+deliver/
+
+# Build artifacts
+*.exe
+*.o
+*.obj
+vgmstream-master/
+vgmstream*.tar.gz
+
+# OS cruft
+Thumbs.db
+.DS_Store
