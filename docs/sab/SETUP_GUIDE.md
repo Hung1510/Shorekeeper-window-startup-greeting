@@ -1,4 +1,4 @@
-# Startup Voice Greeting — Complete Setup Guide
+# Startup Voice Greeting - Complete Setup Guide
 
 Make your Windows PC play a voice clip when you log in, using the compiled
 `startup_voice.exe`
@@ -8,25 +8,25 @@ Make your Windows PC play a voice clip when you log in, using the compiled
 
 ## What you need
 
-- `startup_voice.exe` — download it from the [Releases page](../../releases) (no need to build anything)
+- `startup_voice.exe` - download it from the [Releases page](../../releases) (no need to build anything)
 - one voice clip renamed to `voice.wav`
 
 ---
 
-## 1 — Put the files in place
+## 1 - Put the files in place
 
 1. Create the folder `C:\Sounds` if it doesn't exist.
 2. Copy into it:
    - `startup_voice.exe`
    - your chosen clip, renamed exactly `voice.wav`
-3. They must sit in the same folder — the exe looks for the wav next to itself.
+3. They must sit in the same folder - the exe looks for the wav next to itself.
 
 > To use a different line later, just replace `voice.wav` with
 > another clip of the same name. Nothing else changes.
 
 ---
 
-## 2 — Test the player
+## 2 - Test the player
 
 1. Double-click `startup_voice.exe`.
 2. You should hear the clip
@@ -35,7 +35,7 @@ Make your Windows PC play a voice clip when you log in, using the compiled
 
 ---
 
-## 3 — Create Task Scheduler task
+## 3 - Create Task Scheduler task
 
 1. Press Start, type Task Scheduler, open it
 2. Right panel -> Create Task… (the full version, not "Basic Task").

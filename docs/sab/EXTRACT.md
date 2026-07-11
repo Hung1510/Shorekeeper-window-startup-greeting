@@ -27,9 +27,9 @@ second argument (`JP` / `EN`) just prefers that language folder if present.
 
 ## Knobs (top of `extract_sab.sh`)
 
-- `MIN_SECS` — minimum clip length to keep (default 0.8s).
-- `TOP_N` — how many curated clips to produce (default 16).
-- `LANG_PICK` — preferred dub folder.
+- `MIN_SECS` - minimum clip length to keep (default 0.8s).
+- `TOP_N` - how many curated clips to produce (default 16).
+- `LANG_PICK` - preferred dub folder.
 
 ## On Windows (manual)
 

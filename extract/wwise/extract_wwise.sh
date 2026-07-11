@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# extract_wwise.sh — Wwise .bnk soundbanks / .wem streams -> curated .wav clips
+# extract_wwise.sh - Wwise .bnk soundbanks / .wem streams -> curated .wav clips
 set -uo pipefail
 
 SRC="${1:?usage: ./extract_wwise.sh <folder-or-zip>}"

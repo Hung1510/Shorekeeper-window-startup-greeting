@@ -35,9 +35,9 @@ huge `Master.bank` plus a `VO_EN.fsb` you actually want:
 
 ## Knobs (top of `extract_fmod.sh`)
 
-- `MIN_SECS` — minimum clip length to keep (default 0.8s).
-- `TOP_N` — how many curated clips to produce (default 16).
-- second CLI arg — optional name filter for which banks to scan.
+- `MIN_SECS` - minimum clip length to keep (default 0.8s).
+- `TOP_N` - how many curated clips to produce (default 16).
+- second CLI arg - optional name filter for which banks to scan.
 
 ## On Windows (manual)
 
@@ -49,7 +49,7 @@ vgmstream-cli -S 0 -o "out\line_?s.wav" yourfile.fsb
 
 `-S 0` extracts all subsongs; listen through and keep the one you want, then
 normalize/trim with ffmpeg. Same trick works on a `.bank` if vgmstream opens it
-directly — if it refuses, pop the embedded `.fsb` out first (python-fsb5 /
+directly - if it refuses, pop the embedded `.fsb` out first (python-fsb5 /
 fsbext) and point vgmstream at that.
 
 ## Next
